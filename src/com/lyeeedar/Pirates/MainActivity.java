@@ -2,6 +2,8 @@ package com.lyeeedar.Pirates;
 
 import android.os.Bundle;
 
+import com.Lyeeedar.Pirates.GLOBALS;
+import com.Lyeeedar.Pirates.PirateGame;
 import com.badlogic.gdx.backends.android.AndroidApplication;
 import com.badlogic.gdx.backends.android.AndroidApplicationConfiguration;
 
