@@ -12,6 +12,12 @@ uniform float u_pl_att[4];
 uniform sampler2D u_texture;
 uniform vec3 u_colour;
 
+uniform vec3 fog_colour;
+uniform float fog_min;
+uniform float fog_max;
+
+varying float v_vposLen;
+
 varying vec2 v_texCoords;
 varying vec3 v_pos;
 varying vec3 v_normal;
@@ -65,7 +71,12 @@ void main()
 		factor = 0.5;
 	}
 
-	gl_FragColor.rgb = u_colour * texture2D(u_texture, v_texCoords).rgb * light * factor;
+	float fog_fac = (v_vposLen - fog_min) / (fog_max - fog_min);
+	fog_fac = clamp (fog_fac, 0.0, 1.0);
+
+	vec3 final_colour = u_colour * texture2D(u_texture, v_texCoords).rgb * light * factor;
+
+	gl_FragColor.rgb = mix(final_colour, fog_colour, fog_fac);
 
 	gl_FragColor.a = 1.0;
 

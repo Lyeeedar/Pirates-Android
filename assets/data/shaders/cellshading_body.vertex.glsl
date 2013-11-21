@@ -7,6 +7,10 @@ uniform mat4 u_pv;
 uniform mat4 u_mm;
 uniform mat3 u_nm;
 
+uniform vec3 u_viewPos;
+
+varying float v_vposLen;
+
 varying vec2 v_texCoords;
 varying vec3 v_pos;
 varying vec3 v_normal;
@@ -19,4 +23,6 @@ void main()
 	v_pos = worldPos.xyz;
 	v_texCoords = a_texCoord0;
 	v_normal = normalize(u_nm * a_normal);
+
+	v_vposLen = length(u_viewPos-worldPos.xyz);
 }
