@@ -72,5 +72,5 @@ void main()
 
 	vec3 col = texture2D(u_texture, v_pos.xz/50.0).rgb * light * factor;
 
-	gl_FragColor = mix(vec4(col, 1.0), vec4(fog_colour, 1.0), fog_fac);
+	gl_FragColor = mix(vec4(col, 1.0), vec4(fog_colour, 0.0), fog_fac);
 }

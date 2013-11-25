@@ -76,8 +76,5 @@ void main()
 
 	vec3 final_colour = u_colour * texture2D(u_texture, v_texCoords).rgb * light * factor;
 
-	gl_FragColor.rgb = mix(final_colour, fog_colour, fog_fac);
-
-	gl_FragColor.a = 1.0;
-
+	gl_FragColor = mix(vec4(final_colour, 1.0), vec4(fog_colour, 0.0), fog_fac);
 }

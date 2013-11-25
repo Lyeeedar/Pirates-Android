@@ -2,26 +2,28 @@
 	precision mediump float;
 #endif
 			
-uniform vec3 colour_sea;
-uniform float sea_height;
-			
-uniform vec3 colour_sky;
+uniform sampler2D glow;
+uniform sampler2D color;
 
-varying float v_height;
-			
-void main() 
+uniform vec3 sun_dir;
+
+varying vec3 v_pos;
+
+void main()
 {
-	vec3 colour = vec3(0.0);
+    vec3 V = normalize(v_pos);
+    vec3 L = normalize(sun_dir);
 
-	if (v_height < sea_height)
-	{
-		colour = colour_sea;
-	}
-	else
-	{
-		colour = colour_sky;
-	}
+    // Compute the proximity of this fragment to the sun.
 
-	gl_FragColor.a = 1.0;
-	gl_FragColor.rgb = colour;
+    float vl = dot(V, L);
+
+    // Look up the sky color and glow colors.
+
+    vec4 Kc = texture2D(color, vec2((L.y + 1.0) / 2.0, (V.y - 1.0) * -1.0));
+    vec4 Kg = texture2D(glow,  vec2(vl, (L.y + 1.0) / 2.0));
+
+    // Combine the color and glow giving the pixel value.
+
+    gl_FragColor = vec4( (Kc.rgb + (Kg.rgb * Kg.a)) / 2.0, Kc.a);
 }

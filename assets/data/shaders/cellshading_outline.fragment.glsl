@@ -15,8 +15,5 @@ void main()
 	float fog_fac = (v_vposLen - fog_min) / (fog_max - fog_min);
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
-	gl_FragColor.rgb = mix(u_colour, fog_colour, fog_fac);
-
-	gl_FragColor.a = 1.0;
-
+	gl_FragColor = mix(vec4(u_colour, 1.0), vec4(fog_colour, 0.0), fog_fac);
 }

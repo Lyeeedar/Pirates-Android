@@ -74,5 +74,5 @@ void main()
 
 	vec3 seaCol = texture2D(u_texture, v_pos.xz/50.0).rgb * u_colour * light * factor;
 
-	gl_FragColor = mix(vec4(seaCol, 0.75), vec4(fog_colour, 1.0), fog_fac);
+	gl_FragColor = mix(vec4(seaCol, 0.99), vec4(fog_colour, 0.0), fog_fac);
 }
