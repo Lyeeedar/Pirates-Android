@@ -30,7 +30,7 @@ float wave(int i, float x, float y)
 float waveHeight(float x, float y) 
 {
     float height = 0.0;
-    for (int i = 0; i < numWaves; ++i)
+    for (int i = 0; i < numWaves; i++)
         height += wave(i, x, y);
     return height;
 }

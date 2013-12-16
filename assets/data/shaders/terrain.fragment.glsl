@@ -9,15 +9,18 @@ uniform vec3 u_pl_pos[4];
 uniform vec3 u_pl_col[4];
 uniform float u_pl_att[4];
 
-uniform sampler2D u_texture;
+uniform sampler2D u_texture1;
+uniform sampler2D u_texture2;
+uniform sampler2D u_texture3;
 
-uniform vec3 fog_colour;
 uniform float fog_min;
 uniform float fog_max;
 
 varying vec3 v_pos;
 varying float v_vposLen;
 varying vec3 v_normal;
+
+varying vec3 v_splat_opacities;
 
 float calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation)
 {
@@ -34,11 +37,14 @@ float calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation)
 
 	float light = NdotL * attenuation;
 
-	if (light < 0.0) {
-		light = 0.0;
-	}
+	light = max(light, 0.0);
  
 	return light;
+}
+
+vec3 splat(vec3 t1, float a1, vec3 t2, float a2)
+{
+	return mix(t1, t2, clamp(a2-a1, 0.0, 1.0));
 }
 			
 void main() 
@@ -70,7 +76,16 @@ void main()
 	float fog_fac = (v_vposLen - fog_min) / (fog_max - fog_min);
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
-	vec3 col = texture2D(u_texture, v_pos.xz/50.0).rgb * light * factor;
+	vec3 tex = splat(
+		texture2D(u_texture1, v_pos.xz/50.0).rgb, v_splat_opacities.r,
+		texture2D(u_texture2, v_pos.xz/50.0).rgb, v_splat_opacities.g
+	);
+	tex = splat(
+		tex, (v_splat_opacities.r+v_splat_opacities.g)/2.0,
+		texture2D(u_texture3, v_pos.xz/50.0).rgb, v_splat_opacities.b
+	);
 
-	gl_FragColor = mix(vec4(col, 1.0), vec4(fog_colour, 0.0), fog_fac);
+	vec3 col = tex * light * factor;
+
+	gl_FragColor = mix(vec4(col, 1.0), vec4(0.0), fog_fac);
 }
