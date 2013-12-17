@@ -75,7 +75,7 @@ void main()
     vec4 position = vec4(a_position.x+u_posx, 0.0, a_position.z+u_posz, 1.0);
 
     float height = u_seaFloor;
-    v_splat_opacities = vec3(0.0, 1.0, 0.0);
+    v_splat_opacities = vec3(0.0, 0.0, 0.0);
     v_normal = vec3(0.0, 1.0, 0.0);
     
     float tmp = calculateLand(position, u_hm1, 0);
