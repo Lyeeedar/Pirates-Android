@@ -13,6 +13,7 @@ uniform vec3 u_colour;
 
 uniform sampler2D u_texture;
 
+uniform vec3 fog_col;
 uniform float fog_min;
 uniform float fog_max;
 
@@ -73,5 +74,5 @@ void main()
 
 	vec3 seaCol = texture2D(u_texture, v_pos.xz/50.0).rgb * u_colour * light * factor;
 
-	gl_FragColor = mix(vec4(seaCol, 1.0), vec4(0.0), fog_fac);
+	gl_FragColor = mix(vec4(seaCol, 1.0), vec4(fog_col, 1.0), fog_fac);
 }

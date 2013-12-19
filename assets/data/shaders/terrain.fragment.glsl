@@ -14,6 +14,7 @@ uniform sampler2D u_texture2;
 uniform sampler2D u_texture3;
 uniform sampler2D u_texture4;
 
+uniform vec3 fog_col;
 uniform float fog_min;
 uniform float fog_max;
 
@@ -84,5 +85,5 @@ void main()
 
 	vec3 col = tex * light * factor;
 
-	gl_FragColor = mix(vec4(col, 1.0), vec4(0.0), fog_fac);
+	gl_FragColor = mix(vec4(col, 1.0), vec4(fog_col, 1.0), fog_fac);
 }
