@@ -2,6 +2,20 @@ attribute vec3 a_position;
 
 const float pi = 3.14159;
 
+// Land
+
+uniform sampler2D u_hm1;
+uniform sampler2D u_hm2;
+uniform sampler2D u_hm3;
+
+uniform float u_seaFloor;
+
+uniform vec3 u_hm_pos[3];
+uniform float u_hm_height[3];
+uniform float u_hm_scale[3];
+
+// Sea
+
 uniform float delta;
 uniform int numWaves;
 uniform float amplitude[8];
@@ -18,6 +32,7 @@ uniform vec3 u_viewPos;
 varying float v_vposLen;
 varying vec3 v_pos;
 varying vec3 v_normal;
+varying float v_depth;
 
 float wave(int i, float x, float y) 
 {
@@ -61,14 +76,51 @@ vec3 waveNormal(float x, float y) {
     vec3 n = vec3(-dx, 1.0, -dy);
     return normalize(n);
 }
-			
+
+float calculateLand(vec4 position, sampler2D u_hm, int i)
+{
+    vec2 movedPos = (position.xz-u_hm_pos[i].xz)/u_hm_scale[i];
+    
+    float height = u_seaFloor;
+
+    if (movedPos.x > 0.0 && movedPos.y > 0.0 && movedPos.x < 1.0 && movedPos.y < 1.0) 
+    {
+        vec4 tmp = texture2D(u_hm, movedPos);
+
+        height = u_seaFloor+tmp.a*u_hm_height[i];
+    }
+    return height;
+}
+            
 void main() 
 {
     vec4 position = vec4(a_position.x+u_posx, 0.0, a_position.z+u_posz, 1.0);
-    position.y = a_position.y+waveHeight(position.x, position.z);
+
+    float height = u_seaFloor;
+    
+    float tmp = calculateLand(position, u_hm1, 0);
+    if (tmp > u_seaFloor) 
+    {
+        height = tmp;
+    }
+    tmp = calculateLand(position, u_hm2, 1);
+    if (tmp > u_seaFloor) 
+    {
+        height = tmp;
+    }
+    tmp = calculateLand(position, u_hm3, 2);
+    if (tmp > u_seaFloor) 
+    {
+        height = tmp;
+    }
+
+    float scale_factor = 1.0 - clamp((height-u_seaFloor)/abs(u_seaFloor), 0.0, 1.0);
+
+    position.y = a_position.y+waveHeight(position.x, position.z)*scale_factor;
 	gl_Position = u_mvp * position;
 
     v_pos = position.xyz;
     v_vposLen = length(u_viewPos-position.xyz);
     v_normal = vec3(0.0, 1.0, 0.0);//waveNormal(position.x, position.z);
+    v_depth = scale_factor;
 }

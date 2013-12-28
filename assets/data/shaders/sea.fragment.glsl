@@ -20,6 +20,7 @@ uniform float fog_max;
 varying vec3 v_pos;
 varying float v_vposLen;
 varying vec3 v_normal;
+varying float v_depth;
 
 float calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation)
 {
@@ -73,6 +74,7 @@ void main()
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
 	vec3 seaCol = texture2D(u_texture, v_pos.xz/50.0).rgb * u_colour * light * factor;
+	seaCol -= vec3(0.2*v_depth);
 
 	gl_FragColor = mix(vec4(seaCol, 1.0), vec4(fog_col, 1.0), fog_fac);
 }
