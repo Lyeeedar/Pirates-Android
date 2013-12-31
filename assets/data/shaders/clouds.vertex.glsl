@@ -1,20 +1,31 @@
 
 attribute vec3 a_position;
+attribute vec2 a_texCoord0;
 
 uniform mat4 u_mm;
 uniform mat4 u_mvp;
-uniform vec3 u_pos;
+
 uniform float u_time;
 
-varying vec2 v_texCoords;
+uniform vec3 u_pos;
+
+uniform float u_height;
+
+varying vec2 v_texCoords1;
+varying vec2 v_texCoords2;
+varying vec2 v_texCoords3;
+varying vec2 v_texCoords4;
 
 void main()
 {	
-	vec4 tpos = u_mm * vec4(a_position, 0.0);
-	vec4 position = u_mvp * vec4(tpos.xyz+u_pos, 1.0);
-	gl_Position = position.xyww;
+	vec3 truepos = vec3(a_position.x, 0, a_position.z);
+	vec4 position = u_mm * vec4(a_position, 1.0);
+	position.y = a_position.y*(u_height+u_pos.y);
+	gl_Position = (u_mvp * position).xyww;
 
-	float slope = (tpos.y*tpos.y)/100.0;
-
-	v_texCoords = (((tpos+u_pos/50.0f).xz)+vec2(u_time))/slope;
+	vec3 pos = truepos+u_pos;
+	v_texCoords1 = pos.xz/10000.0 + u_time/100.0;
+	v_texCoords2 = pos.xz/10000.0 + u_time/1000.0;
+	v_texCoords3 = pos.xz/10000.0 + u_time/10000.0;
+	v_texCoords4 = pos.xz/10000.0 + u_time/100000.0;
 }
