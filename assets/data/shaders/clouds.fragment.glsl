@@ -32,10 +32,10 @@ float CloudExpCurve(float v)
 void main()
 {	
 	vec4 col = 
-		texture2D(u_texture1, v_texCoords1)*0.5 +
-		texture2D(u_texture2, v_texCoords2)*0.25 +
-		texture2D(u_texture3, v_texCoords3)*0.125 +
-		texture2D(u_texture4, v_texCoords4)*0.0625;
+		texture2D(u_texture4, v_texCoords1)*0.5 +
+		texture2D(u_texture3, v_texCoords2)*0.25 +
+		texture2D(u_texture2, v_texCoords3)*0.125 +
+		texture2D(u_texture1, v_texCoords4)*0.0625;
 
 		col.a = CloudExpCurve(col.a);
 

@@ -24,8 +24,8 @@ void main()
 	gl_Position = (u_mvp * position).xyww;
 
 	vec3 pos = truepos+u_pos;
-	v_texCoords1 = pos.xz/10000.0 + u_time/100.0;
-	v_texCoords2 = pos.xz/10000.0 + u_time/1000.0;
-	v_texCoords3 = pos.xz/10000.0 + u_time/10000.0;
-	v_texCoords4 = pos.xz/10000.0 + u_time/100000.0;
+	v_texCoords1 = pos.xz/10000.0 + u_time/512.0;
+	v_texCoords2 = pos.xz/10000.0 + u_time/256.0;
+	v_texCoords3 = pos.xz/10000.0 + u_time/128.0;
+	v_texCoords4 = pos.xz/10000.0 + u_time/64.0;
 }

@@ -78,5 +78,7 @@ void main()
 
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0) * factor;
 
+	//if (final_colour.a == 0.0) discard;
+
 	gl_FragColor = mix(final_colour, vec4(fog_col, final_colour.a), fog_fac);
 }
