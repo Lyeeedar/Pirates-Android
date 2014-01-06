@@ -16,6 +16,8 @@ uniform vec3 fog_col;
 uniform float fog_min;
 uniform float fog_max;
 
+uniform float u_fade;
+
 varying float v_vposLen;
 
 varying vec2 v_texCoords;
@@ -75,10 +77,11 @@ void main()
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
 	vec4 texCol = texture2D(u_texture, v_texCoords);
+	texCol.a *= u_fade;
+
+	if (texCol.a == 0.0) discard;
 
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0) * factor;
 
-	//if (final_colour.a == 0.0) discard;
-
-	gl_FragColor = mix(final_colour, vec4(fog_col, final_colour.a), fog_fac);
+	gl_FragColor = mix(vec4(final_colour.xyz, texCol.a), vec4(fog_col, final_colour.a), fog_fac);
 }
