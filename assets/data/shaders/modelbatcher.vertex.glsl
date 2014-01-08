@@ -2,9 +2,8 @@
 attribute vec3 a_position;
 attribute vec3 a_normal; 
 attribute vec2 a_texCoord0;
-attribute float a_instance_index;
 
-uniform vec3 instance_positions[MAX_INSTANCES];
+uniform vec3 instance_position;
 
 uniform mat4 u_pv;
 uniform vec3 u_viewPos;
@@ -17,7 +16,7 @@ varying vec3 v_normal;
 
 void main()
 {	
-	vec4 worldPos = vec4(a_position+instance_positions[(int)a_instance_index], 1.0);
+	vec4 worldPos = vec4(a_position+instance_position, 1.0);
 	gl_Position = u_pv * worldPos;
 
 	v_pos = worldPos.xyz;

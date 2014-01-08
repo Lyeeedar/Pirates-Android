@@ -79,8 +79,6 @@ void main()
 	vec4 texCol = texture2D(u_texture, v_texCoords);
 	texCol.a *= u_fade;
 
-	if (texCol.a == 0.0) discard;
-
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0) * factor;
 
 	gl_FragColor = mix(vec4(final_colour.xyz, texCol.a), vec4(fog_col, final_colour.a), fog_fac);
