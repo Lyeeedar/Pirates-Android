@@ -41,25 +41,24 @@ float calculateLand(vec4 position, sampler2D u_hm, int i)
 
     if (movedPos.x > 0.0 && movedPos.y > 0.0 && movedPos.x < 1.0 && movedPos.y < 1.0) 
     {
-        //movedPos = movedPos + vec2((u_hm_scale[i]/u_hm_size[i])/-2.0) / u_hm_scale[i];
         vec4 tmp = texture2D(u_hm, movedPos);
 
         height = u_seaFloor+tmp.a*u_hm_height[i];
 
         vec2 pos;
         pos = movedPos+vec2(0.0, offset);
-        vec3 up = vec3(pos.x, texture2D(u_hm, pos).a, pos.y);
+        vec3 up = vec3(pos.x*u_hm_scale[i], texture2D(u_hm, pos).a*u_hm_height[i], pos.y*u_hm_scale[i]);
 
         pos = movedPos+vec2(0.0, -offset);
-        vec3 down = vec3(pos.x, texture2D(u_hm, pos).a, pos.y);
+        vec3 down = vec3(pos.x*u_hm_scale[i], texture2D(u_hm, pos).a*u_hm_height[i], pos.y*u_hm_scale[i]);
 
         pos = movedPos+vec2(-offset, 0.0);
-        vec3 left = vec3(pos.x, texture2D(u_hm, pos).a, pos.y);
+        vec3 left = vec3(pos.x*u_hm_scale[i], texture2D(u_hm, pos).a*u_hm_height[i], pos.y*u_hm_scale[i]);
 
         pos = movedPos+vec2(offset, 0.0);
-        vec3 right = vec3(pos.x, texture2D(u_hm, pos).a, pos.y);
+        vec3 right = vec3(pos.x*u_hm_scale[i], texture2D(u_hm, pos).a*u_hm_height[i], pos.y*u_hm_scale[i]);
 
-        vec3 opos = vec3(movedPos.x, tmp.a, movedPos.y);
+        vec3 opos = vec3(movedPos.x*u_hm_scale[i], tmp.a*u_hm_height[i], movedPos.y*u_hm_scale[i]);
 
         vec3 normal = calculateNormal(opos, up, right);
         normal += calculateNormal(opos, right, down);

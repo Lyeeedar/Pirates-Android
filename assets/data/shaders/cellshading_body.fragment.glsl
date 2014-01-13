@@ -63,7 +63,7 @@ void main()
 		}
 	}
 
-	//light = normalize(light);
+	light = clamp(light, 0.0, 1.0);
 
 	float factor = 1.0;
 

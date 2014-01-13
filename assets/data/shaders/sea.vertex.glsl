@@ -86,8 +86,6 @@ float calculateLand(vec4 position, sampler2D u_hm, int i)
 
     if (movedPos.x > 0.0 && movedPos.y > 0.0 && movedPos.x < 1.0 && movedPos.y < 1.0) 
     {
-        //movedPos = movedPos + vec2((u_hm_scale[i]/u_hm_size[i])/-2.0) / u_hm_scale[i];
-
         vec4 tmp = texture2D(u_hm, movedPos);
 
         height = u_seaFloor+tmp.a*u_hm_height[i];
@@ -124,6 +122,6 @@ void main()
 
     v_pos = position.xyz;
     v_vposLen = length(u_viewPos-position.xyz);
-    v_normal = vec3(0.0, 1.0, 0.0);//waveNormal(position.x, position.z);
+    v_normal = waveNormal(position.x, position.z);
     v_depth = scale_factor;
 }

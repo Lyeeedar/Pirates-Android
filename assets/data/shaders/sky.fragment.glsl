@@ -2,28 +2,38 @@
 	precision mediump float;
 #endif
 			
-uniform sampler2D glow;
-uniform sampler2D color;
+uniform vec3 sky_col;
+uniform vec3 col_shift;
 
+uniform vec3 sun_col;
 uniform vec3 sun_dir;
+uniform float sun_size;
 
 varying vec3 v_pos;
 
 void main()
 {
     vec3 V = normalize(v_pos);
+    vec3 Vh = normalize(vec3(v_pos.x, 0, v_pos.z));
     vec3 L = normalize(sun_dir);
+    vec3 Lh = normalize(vec3(sun_dir.x, 0, sun_dir.z));
 
-    // Compute the proximity of this fragment to the sun.
+    float vl = clamp((dot(V, L)-(1.0-sun_size)) / sun_size, 0.0, 1.0);
 
-    float vl = dot(V, L);
+    vec4 Kc = clamp(vec4(sky_col + (col_shift * max(V.y, 0.0)), 1.0), 0.0, 1.0);
+    vec4 Kg = vec4(sun_col, vl);
 
-    // Look up the sky color and glow colors.
+    float cA = clamp((dot(Lh, L)-0.5)/0.5, 0.0, 1.0);
+    float xA = clamp(dot(Vh, Lh), 0.0, 1.0);
+    float yA = clamp((dot(Vh, V)-0.8)/0.2, 0.0, 1.0);
+    float hA = 0.2 - clamp(1.0 - (pow(xA/1.5, 2.0) + pow(yA/1.1, 2.0)), 0.0, 1.0);
 
-    vec4 Kc = texture2D(color, vec2((L.y + 1.0) / 2.0, (V.y - 1.0) * -1.0));
-    vec4 Kg = texture2D(glow,  vec2(vl, (L.y + 1.0) / 2.0));
+    vec3 corona = vec3(1.0, 0.1, 0.1);
 
-    // Combine the color and glow giving the pixel value.
+    Kg.rgb += corona * (cA+0.2);
+    Kg.a += cA*hA;
 
-    gl_FragColor = vec4( (Kc.rgb + (Kg.rgb * Kg.a)) / 2.0, Kc.a);
+    Kg = clamp(Kg, 0.0, 1.0);
+
+    gl_FragColor = vec4(mix(Kc.rgb, Kg.rgb, Kg.a), 1.0);
 }
