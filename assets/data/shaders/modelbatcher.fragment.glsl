@@ -79,7 +79,9 @@ void main()
 	vec4 texCol = texture2D(u_texture, v_texCoords);
 	texCol.a *= u_fade;
 
+#ifdef HAS_TRANSPARENT
 	if (texCol.a == 0.0) discard;
+#endif
 
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0) * factor;
 
