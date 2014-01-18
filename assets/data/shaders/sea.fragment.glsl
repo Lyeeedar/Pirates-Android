@@ -62,18 +62,12 @@ void main()
 		}
 	}
 
-	//light = normalize(light);
-
-	float factor = 1.0;
-
-	if (intensity < 0.5) {
-		factor = 0.5;
-	}
+	light = clamp(light, 0.0, 1.0);
 
 	float fog_fac = (v_vposLen - fog_min) / (fog_max - fog_min);
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
-	vec3 seaCol = texture2D(u_texture, v_pos.xz/50.0).rgb * u_colour * light * factor;
+	vec3 seaCol = texture2D(u_texture, v_pos.xz/50.0).rgb * u_colour * light;
 	seaCol -= vec3(0.2*v_depth);
 
 	gl_FragColor = mix(vec4(seaCol, 1.0), vec4(fog_col, 1.0), fog_fac);
