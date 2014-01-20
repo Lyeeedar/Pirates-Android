@@ -65,7 +65,7 @@ void main()
 
 	light = clamp(light, 0.0, 1.0);
 
-	float factor = 0.8;
+	float factor = 1.0;
 
 	if (intensity < 0.5) {
 		factor = 0.5;
