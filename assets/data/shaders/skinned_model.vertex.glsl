@@ -40,10 +40,10 @@ uniform mat4 u_bones[numBones];
 
 uniform mat4 u_pv;
 uniform mat4 u_mm;
-uniform mat3 u_nm;
 
 uniform vec3 u_viewPos;
 
+varying vec3 v_viewDir;
 varying float v_vposLen;
 
 varying vec2 v_texCoords;
@@ -80,14 +80,17 @@ void main() {
 	#endif //boneWeight7Flag
 		
 	vec4 worldPos = u_mm * skinningMat * vec4(a_position, 1.0);
+	v_normal = normalize( ( u_mm * skinningMat * vec4( a_normal, 0.0 ) ).xyz );
 	#else
 	vec4 worldPos = u_mm * vec4(a_position, 1.0);
+	v_normal = normalize( ( u_mm * vec4( a_normal, 0.0 ) ).xyz );
 	#endif
 	gl_Position = u_pv * worldPos;
 
 	v_pos = worldPos.xyz;
 	v_texCoords = a_texCoord0;
-	v_normal = normalize(u_nm * a_normal);
 
-	v_vposLen = length(u_viewPos-worldPos.xyz);
+	vec3 viewDir = u_viewPos-worldPos.xyz;
+	v_viewDir = normalize(viewDir);
+	v_vposLen = length(viewDir);
 }

@@ -2,6 +2,9 @@
 	precision mediump float;
 #endif
 
+uniform float u_outline_unlit;
+uniform float u_outline_lit;
+
 uniform vec3 u_al_col;
 uniform vec3 u_dl_dir;
 uniform vec3 u_dl_col;
@@ -16,6 +19,7 @@ uniform vec3 fog_col;
 uniform float fog_min;
 uniform float fog_max;
 
+varying vec3 v_viewDir;
 varying float v_vposLen;
 
 varying vec2 v_texCoords;
@@ -79,5 +83,10 @@ void main()
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0) * factor;
 	final_colour.a = 1.0;
 	
+	if (abs(dot(v_viewDir, v_normal)) < mix(u_outline_unlit, u_outline_lit, factor))
+    {
+    	final_colour.rgb = 0.0;
+    }
+
 	gl_FragColor = mix(final_colour, vec4(fog_col, final_colour.a), fog_fac);
 }

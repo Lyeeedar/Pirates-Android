@@ -29,6 +29,7 @@ uniform int u_posz;
 uniform mat4 u_mvp;
 
 uniform vec3 u_viewPos;
+uniform float fog_max;
 
 varying float v_vposLen;
 varying vec3 v_pos;
@@ -115,13 +116,15 @@ void main()
         height = tmp;
     }
 
-    float scale_factor = 1.0 - clamp((height-u_seaFloor)/abs(u_seaFloor), 0.0, 1.0);
+    float vposlen = length(u_viewPos-position.xyz);
+    float seabed_factor = 1.0 - clamp((height-u_seaFloor)/abs(u_seaFloor), 0.0, 1.0);
+    float dist_factor = 1.0 - vposlen / fog_max;
 
-    position.y = a_position.y+waveHeight(position.x, position.z)*scale_factor;
+    position.y = a_position.y+waveHeight(position.x, position.z)*seabed_factor*dist_factor;
 	gl_Position = u_mvp * position;
 
     v_pos = position.xyz;
-    v_vposLen = length(u_viewPos-position.xyz);
+    v_vposLen = vposlen;
     v_normal = waveNormal(position.x, position.z);
-    v_depth = scale_factor;
+    v_depth = seabed_factor;
 }
