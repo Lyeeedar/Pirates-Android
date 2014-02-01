@@ -85,7 +85,7 @@ void main()
 	tex = splat(tex, texture2D(u_texture3, v_pos.xz/50.0).rgb, v_splat_opacities.g);
 	tex = splat(tex, texture2D(u_texture4, v_pos.xz/50.0).rgb, v_splat_opacities.b);
 
-	vec3 col = tex * light * factor;
+	vec3 col = tex * light;
 
 	gl_FragColor = mix(vec4(col, 1.0), vec4(fog_col, 1.0), fog_fac);
 }
