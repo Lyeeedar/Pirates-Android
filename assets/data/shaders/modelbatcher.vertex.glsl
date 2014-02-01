@@ -8,6 +8,7 @@ uniform vec3 instance_position;
 uniform mat4 u_pv;
 uniform vec3 u_viewPos;
 
+varying vec3 v_viewDir;
 varying float v_vposLen;
 
 varying vec2 v_texCoords;
@@ -23,5 +24,7 @@ void main()
 	v_texCoords = a_texCoord0;
 	v_normal = a_normal;
 
-	v_vposLen = length(u_viewPos-worldPos.xyz);
+	vec3 viewDir = u_viewPos-worldPos.xyz;
+	v_viewDir = normalize(viewDir);
+	v_vposLen = length(viewDir);
 }

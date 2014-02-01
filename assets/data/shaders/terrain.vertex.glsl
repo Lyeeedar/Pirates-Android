@@ -19,6 +19,7 @@ uniform mat4 u_mvp;
 
 uniform vec3 u_viewPos;
 
+varying vec3 v_viewDir;
 varying float v_vposLen;
 varying vec3 v_pos;
 varying vec3 v_normal;
@@ -101,5 +102,7 @@ void main()
     gl_Position = u_mvp * position;
 
     v_pos = position.xyz;
-    v_vposLen = length(u_viewPos-position.xyz);
+    vec3 viewDir = u_viewPos-position.xyz;
+    v_viewDir = normalize(viewDir);
+    v_vposLen = length(viewDir);
 }

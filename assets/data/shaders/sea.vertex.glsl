@@ -31,6 +31,7 @@ uniform mat4 u_mvp;
 uniform vec3 u_viewPos;
 uniform float fog_max;
 
+varying vec3 v_viewDir;
 varying float v_vposLen;
 varying vec3 v_pos;
 varying vec3 v_normal;
@@ -116,7 +117,10 @@ void main()
         height = tmp;
     }
 
-    float vposlen = length(u_viewPos-position.xyz);
+    vec3 viewDir = u_viewPos-position.xyz;
+    v_viewDir = normalize(viewDir);
+    float vposlen = length(viewDir);
+
     float seabed_factor = 1.0 - clamp((height-u_seaFloor)/abs(u_seaFloor), 0.0, 1.0);
     float dist_factor = 1.0 - vposlen / fog_max;
 
