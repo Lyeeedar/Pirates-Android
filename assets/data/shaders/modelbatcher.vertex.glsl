@@ -25,6 +25,6 @@ void main()
 	v_normal = a_normal;
 
 	vec3 viewDir = u_viewPos-worldPos.xyz;
-	v_viewDir = normalize(viewDir);
+	v_viewDir = viewDir;
 	v_vposLen = length(viewDir);
 }

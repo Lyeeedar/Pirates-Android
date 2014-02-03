@@ -68,7 +68,7 @@ float calculateLand(vec4 position, sampler2D u_hm, int i)
 
         normal /= 4.0;
 
-        v_normal = normalize(normal);
+        v_normal = normal;
         v_splat_opacities = tmp.rgb;
     }
     return height;
@@ -103,6 +103,6 @@ void main()
 
     v_pos = position.xyz;
     vec3 viewDir = u_viewPos-position.xyz;
-    v_viewDir = normalize(viewDir);
+    v_viewDir = viewDir;
     v_vposLen = length(viewDir);
 }

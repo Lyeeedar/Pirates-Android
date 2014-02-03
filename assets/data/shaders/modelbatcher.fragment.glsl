@@ -29,7 +29,7 @@ varying vec2 v_texCoords;
 varying vec3 v_pos;
 varying vec3 v_normal;
 
-vec3 calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation, vec3 l_col, float shininess, vec3 s_col)
+vec3 calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation, vec3 l_col, float shininess, vec3 s_col, vec3 v_dir)
 {
     float distance = length(l_vector);
     vec3 l_dir = l_vector / distance;
@@ -46,7 +46,7 @@ vec3 calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation, vec3 l_col, 
 
 	if (NdotL > 0.0 && shininess > 0.0)
 	{
-		vec3 spec_light = l_col * s_col * attenuation * pow( max( 0.0, dot( reflect( -l_dir, n_dir ), v_viewDir ) ), shininess);
+		vec3 spec_light = l_col * s_col * attenuation * pow( max( 0.0, dot( reflect( -l_dir, n_dir ), v_dir ) ), shininess);
 		light += spec_light;
 	}
 
@@ -61,6 +61,8 @@ void main()
 	float shininess = 0.0;
 	vec3 s_col = vec3(1.0);
 	vec3 emissive = vec3(0.0);
+	vec3 normal = normalize(v_normal);
+	vec3 v_dir = normalize(v_viewDir);
 
 	if (u_texNum > 1)
 	{
@@ -74,12 +76,12 @@ void main()
 		emissive = col.rgb * col.a;
 	}
 
-	vec3 light = u_al_col + calculateLight(u_dl_dir, v_normal, 0.0, u_dl_col, shininess, s_col);
+	vec3 light = u_al_col + calculateLight(u_dl_dir, normal, 0.0, u_dl_col, shininess, s_col, v_dir);
 
 	for ( int i = 0; i < 4; i++ ) 
 	{
 		vec3 light_model = u_pl_pos[i] - v_pos;
-		light += calculateLight(light_model, v_normal, u_pl_att[i], u_pl_col[i], shininess, s_col);
+		light += calculateLight(light_model, normal, u_pl_att[i], u_pl_col[i], shininess, s_col, v_dir);
 	}
 
 	light = clamp(light, 0.0, 1.0);

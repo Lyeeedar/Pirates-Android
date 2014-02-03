@@ -78,12 +78,12 @@ void main() {
 	#ifdef boneWeight7Flag
 		skinningMat += (a_boneWeight7.y) * u_bones[int(a_boneWeight7.x)];
 	#endif //boneWeight7Flag
-		
+
 	vec4 worldPos = u_mm * skinningMat * vec4(a_position, 1.0);
-	v_normal = normalize( ( u_mm * skinningMat * vec4( a_normal, 0.0 ) ).xyz );
+	v_normal = ( u_mm * skinningMat * vec4( a_normal, 0.0 ) ).xyz;
 	#else
 	vec4 worldPos = u_mm * vec4(a_position, 1.0);
-	v_normal = normalize( ( u_mm * vec4( a_normal, 0.0 ) ).xyz );
+	v_normal = ( u_mm * vec4( a_normal, 0.0 ) ).xyz;
 	#endif
 	gl_Position = u_pv * worldPos;
 
@@ -91,6 +91,6 @@ void main() {
 	v_texCoords = a_texCoord0;
 
 	vec3 viewDir = u_viewPos-worldPos.xyz;
-	v_viewDir = normalize(viewDir);
+	v_viewDir = viewDir;
 	v_vposLen = length(viewDir);
 }

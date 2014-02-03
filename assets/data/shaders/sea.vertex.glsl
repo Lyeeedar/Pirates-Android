@@ -77,7 +77,7 @@ vec3 waveNormal(float x, float y) {
         dy += dWavedy(i, x, y);
     }
     vec3 n = vec3(-dx, 1.0, -dy);
-    return normalize(n);
+    return n;
 }
 
 float calculateLand(vec4 position, sampler2D u_hm, int i)
@@ -118,7 +118,7 @@ void main()
     }
 
     vec3 viewDir = u_viewPos-position.xyz;
-    v_viewDir = normalize(viewDir);
+    v_viewDir = viewDir;
     float vposlen = length(viewDir);
 
     float seabed_factor = 1.0 - clamp((height-u_seaFloor)/abs(u_seaFloor), 0.0, 1.0);
