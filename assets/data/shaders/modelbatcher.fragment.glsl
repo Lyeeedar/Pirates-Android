@@ -3,8 +3,6 @@
 #endif
 
 uniform vec3 u_al_col;
-uniform vec3 u_dl_dir;
-uniform vec3 u_dl_col;
 uniform vec3 u_pl_pos[4];
 uniform vec3 u_pl_col[4];
 uniform float u_pl_att[4];
@@ -76,7 +74,7 @@ void main()
 		emissive = col.rgb * col.a;
 	}
 
-	vec3 light = u_al_col + calculateLight(u_dl_dir, normal, 0.0, u_dl_col, shininess, s_col, v_dir);
+	vec3 light = u_al_col;
 
 	for ( int i = 0; i < 4; i++ ) 
 	{
