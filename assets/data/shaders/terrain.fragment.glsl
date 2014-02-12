@@ -77,10 +77,10 @@ void main()
 
 	float texop = 1.0 - clamp(v_splat_opacities.r+v_splat_opacities.g+v_splat_opacities.b, 0.0, 1.0);
 
-	vec3 tex = texture2D(u_texture1, v_pos.xz/50.0).rgb * texop;
-	tex = splat(tex, texture2D(u_texture2, v_pos.xz/50.0).rgb, v_splat_opacities.r);
-	tex = splat(tex, texture2D(u_texture3, v_pos.xz/50.0).rgb, v_splat_opacities.g);
-	tex = splat(tex, texture2D(u_texture4, v_pos.xz/50.0).rgb, v_splat_opacities.b);
+	vec3 tex = texture2D(u_texture1, v_pos.xz/10.0).rgb * texop;
+	tex = splat(tex, texture2D(u_texture2, v_pos.xz/10.0).rgb, v_splat_opacities.r);
+	tex = splat(tex, texture2D(u_texture3, v_pos.xz/10.0).rgb, v_splat_opacities.g);
+	tex = splat(tex, texture2D(u_texture4, v_pos.xz/10.0).rgb, v_splat_opacities.b);
 
 	vec3 col = tex * light;
 
