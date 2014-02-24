@@ -5,7 +5,6 @@ attribute vec2 a_texCoord0;
 
 uniform mat4 u_pv;
 uniform mat4 u_mm;
-uniform mat3 u_nm;
 
 uniform vec3 u_viewPos;
 
@@ -22,7 +21,7 @@ void main()
 
 	v_pos = worldPos.xyz;
 	v_texCoords = a_texCoord0;
-	v_normal = normalize(u_nm * a_normal);
+	v_normal = ( u_mm * vec4( a_normal, 0.0 ) ).xyz;
 
 	v_vposLen = length(u_viewPos-worldPos.xyz);
 }

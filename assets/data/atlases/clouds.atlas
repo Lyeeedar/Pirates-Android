@@ -1,0 +1,110 @@
+
+clouds.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+sprite0
+  rotate: false
+  xy: 1, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite1
+  rotate: false
+  xy: 1, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite2
+  rotate: false
+  xy: 131, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite3
+  rotate: false
+  xy: 1, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite4
+  rotate: false
+  xy: 131, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite5
+  rotate: false
+  xy: 261, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite6
+  rotate: false
+  xy: 1, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite7
+  rotate: false
+  xy: 131, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite8
+  rotate: false
+  xy: 261, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite9
+  rotate: false
+  xy: 391, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite10
+  rotate: false
+  xy: 1, 1
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite11
+  rotate: false
+  xy: 131, 131
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite12
+  rotate: false
+  xy: 261, 261
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite13
+  rotate: false
+  xy: 391, 391
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
+sprite14
+  rotate: false
+  xy: 521, 521
+  size: 128, 128
+  orig: 128, 128
+  offset: 0, 0
+  index: 0
