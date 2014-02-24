@@ -8,11 +8,16 @@ uniform vec3 u_pl_col[4];
 uniform float u_pl_att[4];
 
 uniform int u_texNum;
-
 uniform sampler2D u_texture0;
 uniform sampler2D u_texture1;
 uniform sampler2D u_texture2;
+
 uniform vec3 u_colour;
+
+uniform int u_detailNum;
+uniform sampler2D u_detail0;
+uniform sampler2D u_detail1;
+uniform sampler2D u_detail2;
 
 uniform vec3 fog_col;
 uniform float fog_min;
@@ -86,6 +91,24 @@ void main()
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
 	vec4 texCol = texture2D(u_texture0, v_texCoords);
+	if (u_detailNum > 0)
+	{
+		vec4 dcol = texture2D(u_detail0, v_texCoords);
+		texCol.rgb = dcol.rgb * dcol.a + texCol.rgb * (1.0 - dcol.a);
+		texCol.a = 1.0;
+	}
+	if (u_detailNum > 1)
+	{
+		vec4 dcol = texture2D(u_detail1, v_texCoords);
+		texCol.rgb = dcol.rgb * dcol.a + texCol.rgb * (1.0 - dcol.a);
+		texCol.a = 1.0;
+	}
+	if (u_detailNum > 2)
+	{
+		vec4 dcol = texture2D(u_detail2, v_texCoords);
+		texCol.rgb = dcol.rgb * dcol.a + texCol.rgb * (1.0 - dcol.a);
+		texCol.a = 1.0;
+	}
 
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0);
 	final_colour.a = 1.0;
