@@ -80,7 +80,19 @@ void main()
 
 	light = clamp(light, 0.0, 1.0);
 
-	float fog_fac = (v_vposLen - fog_min) / (fog_max - fog_min);
+	float fogmin = fog_min;
+	float fogmax = fog_max;
+
+	float ypos = max(-v_pos.y, 0.0);
+	float fogscl = ypos / 500.0;
+	fogscl *= fogscl;
+	fogscl *= 5.0;
+	fogscl += 1.0;
+
+	fogmin /= fogscl;
+	fogmax /= fogscl;
+
+	float fog_fac = (v_vposLen - fogmin) / (fogmax - fogmin);
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
 	vec4 texCol = texture2D(u_texture0, v_texCoords);
