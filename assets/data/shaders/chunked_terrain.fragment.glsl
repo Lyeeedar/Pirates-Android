@@ -53,25 +53,30 @@ vec3 calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation, vec3 l_col, 
 vec4 triplanarSample(sampler2D texture, vec3 texcoords, vec3 normal)
 {
 	vec4 colour = vec4(0.0);
-	colour += texture2D(texture, texcoords.zy) * normal.x;
-	colour += texture2D(texture, texcoords.xz) * normal.y;
-	colour += texture2D(texture, texcoords.xy) * normal.z;
+	colour += texture2D(texture, texcoords.zy/10.0) * abs(normal.x);
+	colour += texture2D(texture, texcoords.xz/10.0) * abs(normal.y);
+	colour += texture2D(texture, texcoords.xy/10.0) * abs(normal.z);
 	return colour;
 }
 
+vec4 alphaBlend(vec4 srcCol, vec4 dstCol, float srcAlpha)
+{
+	return srcCol * srcAlpha + dstCol * (1.0 - srcAlpha);
+}
 
 void main()
 {	
 	float shininess = 0.0;
 	vec3 s_col = vec3(1.0);
 	vec3 emissive = vec3(0.0);
+	vec3 normal = normalize(v_normal);
 
 	vec3 light = u_al_col;
 
 	for ( int i = 0; i < 4; i++ ) 
 	{
 		vec3 light_model = u_pl_pos[i] - v_pos;
-		light += calculateLight(light_model, v_normal, u_pl_att[i], u_pl_col[i], shininess, s_col);
+		light += calculateLight(light_model, normal, u_pl_att[i], u_pl_col[i], shininess, s_col);
 	}
 
 	light = clamp(light, 0.0, 1.0);
@@ -91,10 +96,12 @@ void main()
 	float fog_fac = (v_vposLen - fogmin) / (fogmax - fogmin);
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
+	vec3 texalphas = normalize(v_texAlphas);
+
 	vec4 texCol = vec4(0.0);
-	texCol += triplanarSample(u_texture0, v_texCoords, v_normal) * v_texAlphas.x;
-	texCol += triplanarSample(u_texture1, v_texCoords, v_normal) * v_texAlphas.y;
-	texCol += triplanarSample(u_texture2, v_texCoords, v_normal) * v_texAlphas.z;
+	texCol = alphaBlend(triplanarSample(u_texture0, v_texCoords, normal), texCol, texalphas.x);
+	texCol = alphaBlend(triplanarSample(u_texture1, v_texCoords, normal), texCol, texalphas.y);
+	texCol = alphaBlend(triplanarSample(u_texture2, v_texCoords, normal), texCol, texalphas.z);
 
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0);
 	final_colour.a = 1.0;

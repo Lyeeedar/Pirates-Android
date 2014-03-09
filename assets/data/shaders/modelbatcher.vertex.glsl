@@ -4,7 +4,9 @@ attribute vec3 a_position;
 attribute vec3 a_normal; 
 attribute vec2 a_texCoord0;
 
-uniform vec4 instanceOffsets[MAX_INSTANCES];
+uniform InstanceBlock {
+	mat4 u_mm[MAX_INSTANCES];
+};
 
 uniform mat4 u_pv;
 uniform vec3 u_viewPos;
@@ -20,14 +22,14 @@ varying vec3 v_normal;
 
 void main()
 {	
-	vec4 worldPos = vec4(a_position+instanceOffsets[gl_InstanceID].xyz, 1.0);
+	vec4 worldPos = u_mm[gl_InstanceID] * vec4(a_position, 1.0);
 	gl_Position = u_pv * worldPos;
 
-	v_fade = instanceOffsets[gl_InstanceID].a;
+	v_fade = 1.0;//fade[gl_InstanceID];
 
 	v_pos = worldPos.xyz;
 	v_texCoords = a_texCoord0;
-	v_normal = a_normal;
+	v_normal = (transpose(inverse(u_mm[gl_InstanceID])) * vec4(a_normal, 0.0)).xyz;
 
 	vec3 viewDir = u_viewPos-worldPos.xyz;
 	v_viewDir = viewDir;

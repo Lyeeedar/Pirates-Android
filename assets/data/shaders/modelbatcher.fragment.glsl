@@ -12,7 +12,6 @@ uniform int u_texNum;
 uniform sampler2D u_texture0;
 uniform sampler2D u_texture1;
 uniform sampler2D u_texture2;
-uniform vec3 u_colour;
 
 uniform vec3 fog_col;
 uniform float fog_min;
@@ -108,7 +107,7 @@ void main()
 	texCol.a = 1.0;
 #endif
 
-	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0);
+	vec4 final_colour = texCol * vec4(light, 1.0);
 
 	final_colour.rgb += emissive;
 	final_colour = clamp(final_colour, 0.0, 1.0);
