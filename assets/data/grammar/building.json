@@ -1,0 +1,58 @@
+{
+Imports: [
+	data/grammar/bricks.json
+],
+Main: {
+	X: 20,
+	Y: 10,
+	Z: 20,
+	Define: {
+		BrickX: 1,
+		BrickY: 1,
+		BrickZ: 1
+	},
+	Rule: wall_dispatcher
+},
+wall_dispatcher: {
+	Select: {
+		Sides: [
+			Left,
+			Right,
+			Back,
+			Bottom
+		],
+		Coords: [
+			zyx,
+			zy-x,
+			xy-z,
+			xz-y
+		],
+		Size: 1,
+		Rule: wall
+	},
+	Select: {
+		Sides: [
+			Front
+		],
+		Coords: [
+			xyz
+		],
+		Size: 1,
+		Rule: {
+			Divide: {
+				Axis: X,
+				Sizes: [
+					"50%",
+					3,
+					"(50%)-3"
+				],
+				Rules: [
+					wall,
+					empty,
+					wall
+				]
+			}
+		}
+	}
+}
+}

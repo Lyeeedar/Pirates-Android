@@ -1,0 +1,55 @@
+{
+Main: {
+	X: 10,
+	Y: 10,
+	Z: 1,
+	Define: {
+		BrickX: 1,
+		BrickY: 1,
+		BrickZ: 1
+	},
+	Rule: wall
+},
+brick: {
+	X: "98%",
+	Y: "98%",
+	Z: "(90%)+rnd(20%)",
+	Mesh: {
+		Name: Box,
+		Texture: data/textures/blank
+	}
+},
+backing_wall: {
+	Mesh: {
+		Name: Box,
+		Texture: data/textures/blank
+	}
+},
+empty: {},
+wall: {
+	Repeat: {
+		Axis: Z,
+		Size: "70%",
+		Repeats: 1,
+		Rule: {
+			Repeat: {
+				Axis: Y,
+				Size: BrickY,
+				Repeats: -1,
+				Rule: {
+					Z: "(100%)+rnd(0.5)",
+					Repeat: {
+						Axis: X,
+						Size: BrickX+rnd(BrickX),
+						Repeats: -1,
+						Rule: brick,
+						RemainderRule: brick
+					}
+				},
+				RemainderRule: empty
+			}
+		},
+		RemainderRule: backing_wall
+	}
+}
+}
