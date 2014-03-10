@@ -15,14 +15,14 @@ brick: {
 	Y: "98%",
 	Z: "(90%)+rnd(20%)",
 	Mesh: {
-		Name: Box,
-		Texture: data/textures/blank
+		Name: brickMesh,
+		Texture: brickTexture
 	}
 },
 backing_wall: {
 	Mesh: {
-		Name: Box,
-		Texture: data/textures/blank
+		Name: backingWallMesh,
+		Texture: backingWallTexture
 	}
 },
 empty: {},
