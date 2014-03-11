@@ -25,6 +25,9 @@ varying vec3 v_pos;
 varying vec3 v_normal;
 varying vec3 v_splat_opacities;
 
+uniform mat4 u_depthBiasMVP;
+varying vec4 v_shadowCoords;
+
 vec3 calculateNormal(vec3 v1, vec3 v2, vec3 v3)
 {
     vec3 U = v2-v1;
@@ -105,4 +108,6 @@ void main()
     vec3 viewDir = u_viewPos-position.xyz;
     v_viewDir = viewDir;
     v_vposLen = length(viewDir);
+
+    v_shadowCoords = u_depthBiasMVP * position;
 }

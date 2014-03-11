@@ -50,6 +50,9 @@ varying vec2 v_texCoords;
 varying vec3 v_pos;
 varying vec3 v_normal;
 
+uniform mat4 u_depthBiasMVP;
+varying vec4 v_shadowCoords;
+
 void main() {
 
 	#ifdef skinning
@@ -93,4 +96,6 @@ void main() {
 	vec3 viewDir = u_viewPos-worldPos.xyz;
 	v_viewDir = viewDir;
 	v_vposLen = length(viewDir);
+
+	v_shadowCoords = u_depthBiasMVP * worldPos;
 }

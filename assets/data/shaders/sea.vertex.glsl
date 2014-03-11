@@ -37,6 +37,9 @@ varying vec3 v_pos;
 varying vec3 v_normal;
 varying float v_depth;
 
+uniform mat4 u_depthBiasMVP;
+varying vec4 v_shadowCoords;
+
 float wave(int i, float x, float y) 
 {
     float frequency = 2.0*pi/wavelength[i];
@@ -131,4 +134,6 @@ void main()
     v_vposLen = vposlen;
     v_normal = waveNormal(position.x, position.z);
     v_depth = seabed_factor;
+
+    v_shadowCoords = u_depthBiasMVP * position;
 }
