@@ -10,6 +10,9 @@ uniform float u_pl_att[4];
 uniform sampler2D u_texture0;
 uniform sampler2D u_texture1;
 uniform sampler2D u_texture2;
+uniform sampler2D u_texture3;
+uniform sampler2D u_texture4;
+uniform sampler2D u_texture5;
 uniform vec3 u_colour;
 
 uniform vec3 fog_col;
@@ -19,7 +22,9 @@ uniform float fog_max;
 varying vec3 v_viewDir;
 varying float v_vposLen;
 
-varying vec3 v_texAlphas;
+varying vec3 v_texAlphas1;
+varying vec3 v_texAlphas2;
+
 varying vec3 v_texCoords;
 varying vec3 v_pos;
 varying vec3 v_normal;
@@ -127,12 +132,13 @@ void main()
 	float fog_fac = (v_vposLen - fogmin) / (fogmax - fogmin);
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
-	vec3 texalphas = normalize(v_texAlphas);
-
 	vec4 texCol = vec4(0.0);
-	texCol = alphaBlend(triplanarSample(u_texture0, v_texCoords, normal), texCol, texalphas.x);
-	texCol = alphaBlend(triplanarSample(u_texture1, v_texCoords, normal), texCol, texalphas.y);
-	texCol = alphaBlend(triplanarSample(u_texture2, v_texCoords, normal), texCol, texalphas.z);
+	texCol = alphaBlend(triplanarSample(u_texture0, v_texCoords, normal), texCol, v_texAlphas1.x);
+	texCol = alphaBlend(triplanarSample(u_texture1, v_texCoords, normal), texCol, v_texAlphas1.y);
+	texCol = alphaBlend(triplanarSample(u_texture2, v_texCoords, normal), texCol, v_texAlphas1.z);
+	texCol = alphaBlend(triplanarSample(u_texture3, v_texCoords, normal), texCol, v_texAlphas2.x);
+	texCol = alphaBlend(triplanarSample(u_texture4, v_texCoords, normal), texCol, v_texAlphas2.y);
+	texCol = alphaBlend(triplanarSample(u_texture5, v_texCoords, normal), texCol, v_texAlphas2.z);
 
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0);
 	final_colour.a = 1.0;
