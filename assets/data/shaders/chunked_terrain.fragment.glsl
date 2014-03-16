@@ -1,19 +1,31 @@
-#ifdef GL_ES
-	precision mediump float;
-#endif
+#version 330
+#extension GL_EXT_texture_array : enable
 
 uniform vec3 u_al_col;
 uniform vec3 u_pl_pos[4];
 uniform vec3 u_pl_col[4];
 uniform float u_pl_att[4];
 
-uniform sampler2D u_texture0;
-uniform sampler2D u_texture1;
-uniform sampler2D u_texture2;
-uniform sampler2D u_texture3;
-uniform sampler2D u_texture4;
-uniform sampler2D u_texture5;
+uniform sampler2D u_noise0;
+uniform sampler2D u_noise1;
+
+uniform sampler2DArray u_texture0;
+uniform sampler2DArray u_texture1;
+uniform sampler2DArray u_texture2;
+uniform sampler2DArray u_texture3;
+uniform sampler2DArray u_texture4;
+uniform sampler2DArray u_texture5;
+
 uniform vec3 u_colour;
+
+uniform float u_triplanarScaling;
+
+// uniform int u_texture0Layers;
+// uniform int u_texture1Layers;
+// uniform int u_texture2Layers;
+// uniform int u_texture3Layers;
+// uniform int u_texture4Layers;
+// uniform int u_texture5Layers;
 
 uniform vec3 fog_col;
 uniform float fog_min;
@@ -80,10 +92,27 @@ vec3 calculateLight(vec3 l_vector, vec3 n_dir, float l_attenuation, vec3 l_col, 
 vec4 triplanarSample(sampler2D texture, vec3 texcoords, vec3 normal)
 {
 	vec4 colour = vec4(0.0);
-	colour += texture2D(texture, texcoords.zy/10.0) * abs(normal.x);
-	colour += texture2D(texture, texcoords.xz/10.0) * abs(normal.y);
-	colour += texture2D(texture, texcoords.xy/10.0) * abs(normal.z);
+	colour += texture2D(texture, texcoords.zy/u_triplanarScaling) * abs(normal.x);
+	colour += texture2D(texture, texcoords.xz/u_triplanarScaling) * abs(normal.y);
+	colour += texture2D(texture, texcoords.xy/u_triplanarScaling) * abs(normal.z);
 	return colour;
+}
+
+vec4 triplanarSampleArray(sampler2DArray texture, vec4 texcoords, vec3 normal)
+{
+	vec4 colour = vec4(0.0);
+	colour += texture2DArray(texture, vec3(texcoords.zy/u_triplanarScaling, texcoords.w)) * abs(normal.x);
+	colour += texture2DArray(texture, vec3(texcoords.xz/u_triplanarScaling, texcoords.w)) * abs(normal.y);
+	colour += texture2DArray(texture, vec3(texcoords.xy/u_triplanarScaling, texcoords.w)) * abs(normal.z);
+	return colour;
+}
+
+vec4 noiseSample(sampler2DArray texture, vec3 texcoords, vec3 normal, float noiseval)
+{
+	vec4 val0 = triplanarSampleArray(texture, vec4(texcoords, 0.0), normal) * noiseval ;
+	vec4 val1 = triplanarSampleArray(texture, vec4(texcoords, 1.0), normal) * (1.0 - noiseval) ;
+
+	return val0 + val1;
 }
 
 vec4 alphaBlend(vec4 srcCol, vec4 dstCol, float srcAlpha)
@@ -132,13 +161,15 @@ void main()
 	float fog_fac = (v_vposLen - fogmin) / (fogmax - fogmin);
 	fog_fac = clamp (fog_fac, 0.0, 1.0);
 
+	float noiseval = triplanarSample(u_noise0, v_texCoords/50.0, normal) * 0.75 + triplanarSample(u_noise1, v_texCoords/50.0, normal) * 0.25;
+
 	vec4 texCol = vec4(0.0);
-	texCol = alphaBlend(triplanarSample(u_texture0, v_texCoords, normal), texCol, v_texAlphas1.x);
-	texCol = alphaBlend(triplanarSample(u_texture1, v_texCoords, normal), texCol, v_texAlphas1.y);
-	texCol = alphaBlend(triplanarSample(u_texture2, v_texCoords, normal), texCol, v_texAlphas1.z);
-	texCol = alphaBlend(triplanarSample(u_texture3, v_texCoords, normal), texCol, v_texAlphas2.x);
-	texCol = alphaBlend(triplanarSample(u_texture4, v_texCoords, normal), texCol, v_texAlphas2.y);
-	texCol = alphaBlend(triplanarSample(u_texture5, v_texCoords, normal), texCol, v_texAlphas2.z);
+	if (v_texAlphas1.x > 0.0) texCol = alphaBlend(noiseSample(u_texture0, v_texCoords, normal, noiseval), texCol, v_texAlphas1.x);
+	if (v_texAlphas1.y > 0.0) texCol = alphaBlend(noiseSample(u_texture1, v_texCoords, normal, noiseval), texCol, v_texAlphas1.y);
+	if (v_texAlphas1.z > 0.0) texCol = alphaBlend(noiseSample(u_texture2, v_texCoords, normal, noiseval), texCol, v_texAlphas1.z);
+	if (v_texAlphas2.x > 0.0) texCol = alphaBlend(noiseSample(u_texture3, v_texCoords, normal, noiseval), texCol, v_texAlphas2.x);
+	if (v_texAlphas2.y > 0.0) texCol = alphaBlend(noiseSample(u_texture4, v_texCoords, normal, noiseval), texCol, v_texAlphas2.y);
+	if (v_texAlphas2.z > 0.0) texCol = alphaBlend(noiseSample(u_texture5, v_texCoords, normal, noiseval), texCol, v_texAlphas2.z);
 
 	vec4 final_colour = vec4(u_colour, 1.0) * texCol * vec4(light, 1.0);
 	final_colour.a = 1.0;
