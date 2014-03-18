@@ -28,5 +28,5 @@ void main()
 
 	v_vposLen = length(u_viewPos-worldPos.xyz);
 
-	v_shadowCoords = u_depthBiasMVP * worldPos;
+	v_shadowCoords = u_depthBiasMVP * vec4(worldPos.xyz, 1.0);
 }

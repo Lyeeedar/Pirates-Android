@@ -51,6 +51,7 @@ void main()
 {
     vec3 viewPos = reconstructPos(v_texCoords);
     vec3 normal = texture(u_normal, v_texCoords).xyz * 2.0 - 1.0;
+    normal = normalize(normal);
  
     float ambientOcclusion = 0;
     // perform AO

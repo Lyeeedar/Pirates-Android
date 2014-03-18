@@ -97,5 +97,5 @@ void main() {
 	v_viewDir = viewDir;
 	v_vposLen = length(viewDir);
 
-	v_shadowCoords = u_depthBiasMVP * worldPos;
+	v_shadowCoords = u_depthBiasMVP * vec4(worldPos.xyz, 1.0);
 }
