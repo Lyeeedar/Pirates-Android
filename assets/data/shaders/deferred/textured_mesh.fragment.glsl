@@ -60,8 +60,10 @@ void main()
 
 	final_colour = mix(final_colour, vec4(fog_col, final_colour.a), fog_fac);
 
+	vec3 normal = normalize(v_normal);
+
 	albedoOut = final_colour;
-	normalOut = vec4((normalize(v_normal)+1.0) * 0.5, 1.0);
+	normalOut = vec4((normal+1.0) * 0.5, 1.0);
 	specularOut = specular;
 	emissiveOut = emissive;
 }

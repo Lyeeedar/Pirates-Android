@@ -38,6 +38,7 @@ vec3 reconstructPos(vec2 texcoords)
 {
     vec2 ndc = texcoords * 2.0 - 1.0;
     float depth = texture2D(u_depth, texcoords).r;
+    depth = depth * 2.0 - 1.0;
 
     vec4 pos = vec4(ndc, depth, 1.0);
 
